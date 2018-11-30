@@ -1,0 +1,8 @@
+<xml>
+<!-- Cards references the name of the Sprite to be shown. -->
+	<card rank="1" face="BlueCard"/>
+	<card rank="2" face="GreenCard"/>
+	<card rank="3" face="PurpleCard"/>
+  <card rank="4" face="RedCard"/>
+  <card rank="5" face="YellowCard"/>
+</xml>
