@@ -21,7 +21,6 @@ public class SlotDef
 
 public class FlipOutLayout : MonoBehaviour
 {
-    
     [Header("Set Dynamically")]
     public PT_XMLReader xmlr;
     public PT_XMLHashtable xml;

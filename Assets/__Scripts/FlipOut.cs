@@ -22,13 +22,14 @@ public class FlipOut : MonoBehaviour
     public TextAsset deckXML;
     public TextAsset layoutXML;
     public Vector3 layoutCenter = Vector3.zero;
-    public float handFanDegrees = 10f;
+    public float handFanDegrees = 0f;
     public int numStartingCards = 6;
     public float drawTimeStagger = 0.1f;
 
     [Header("Set Dynamically")]
     public Deck deck;
     public List<CardFlipOut> drawPile;
+    public List<CardFlipOut> discardPile;
     public List<Player> players;
     public CardFlipOut targetCard;
     public TurnPhase phase = TurnPhase.idle;
@@ -56,29 +57,29 @@ public class FlipOut : MonoBehaviour
 
     List<CardFlipOut> UpgradeCardsList(List<Card> lCD)
     {
-        List<CardFlipOut> lCF = new List<CardFlipOut>();
+        List<CardFlipOut> lCB = new List<CardFlipOut>();
         foreach (Card tCD in lCD)
         {
-            lCF.Add(tCD as CardFlipOut);
+            lCB.Add(tCD as CardFlipOut);
         }
-        return (lCF);
+        return (lCB);
     }
 
     // position all the cards in the drawPile property
     public void ArrangeDrawPile()
     {
-        CardFlipOut tCF;
+        CardFlipOut tCB;
 
         for (int i = 0; i < drawPile.Count; i++)
         {
-            tCF = drawPile[i];
-            tCF.transform.SetParent(layoutAnchor);
-            tCF.transform.localPosition = layout.drawPile.pos;
+            tCB = drawPile[i];
+            tCB.transform.SetParent(layoutAnchor);
+            tCB.transform.localPosition = layout.drawPile.pos;
             // Rotation should start at 0 
-            tCF.faceUp = false;
-            tCF.SetSortingLayerName(layout.drawPile.layerName);
-            tCF.SetSortOrder(-i * 4); // Order them front-to-back 
-            tCF.state = CBState.drawpile;
+            tCB.faceUp = false;
+            tCB.SetSortingLayerName(layout.drawPile.layerName);
+            tCB.SetSortOrder(-i * 4); // Order them front-to-back 
+            tCB.state = CBState.drawpile;
         }
     }
 
@@ -108,17 +109,17 @@ public class FlipOut : MonoBehaviour
         }
         players[0].type = PlayerType.human;         // make only the 0th player human
 
-        CardFlipOut tCF;
+        CardFlipOut tCB;
 
-        // deal 6 cards to each player
+        // deal 7 cards to each player
         for (int i = 0; i < numStartingCards; i++)
         {
             for (int j = 0; j < 4; j++)
             {
-                tCF = Draw();
-                tCF.timeStart = Time.time + drawTimeStagger * (i * 4 + j);
+                tCB = Draw();
+                tCB.timeStart = Time.time + drawTimeStagger * (i * 4 + j);
 
-                players[(j + 1) % 4].AddCard(tCF);
+                players[(j + 1) % 4].AddCard(tCB);
             }
         }
         Invoke("DrawFirstTarget", drawTimeStagger * (numStartingCards * 4 + 4));
@@ -127,16 +128,16 @@ public class FlipOut : MonoBehaviour
     public void DrawFirstTarget()
     {
         // flip up the first card from the dP
-        CardFlipOut tCF = MoveToTarget(Draw());
+        CardFlipOut tCB = MoveToTarget(Draw());
 
         // set the CardFlipOut to call cbcallback on this FlipOut when it's done
-        tCF.reportFinishTo = this.gameObject;
+        tCB.reportFinishTo = this.gameObject;
     }
 
     // this callback is used by the last card to be dealt at the beginning
-    public void CBCallback(CardFlipOut cf)
+    public void CBCallback(CardFlipOut cb)
     {
-        Utils.tr("FlipOut: CBCallback()", cf.name);
+        Utils.tr("FlipOut: CBCallback()", cb.name);
         StartGame();
     }
 
@@ -159,12 +160,11 @@ public class FlipOut : MonoBehaviour
         if (CURRENT_PLAYER != null)
         {
             lastPlayerNum = CURRENT_PLAYER.playerNum;
-            /*
+
             if (CheckForGameOver())
             {
                 return;
             }
-            */
         }
 
         CURRENT_PLAYER = players[num];
@@ -177,9 +177,22 @@ public class FlipOut : MonoBehaviour
                  "New: " + CURRENT_PLAYER.playerNum);
     }
 
-    /*
     public bool CheckForGameOver()
     {
+        // see if we need to reshuffle the disP into the draP
+        if (drawPile.Count == 0)
+        {
+            List<Card> cards = new List<Card>();
+            foreach (CardFlipOut cb in discardPile)
+            {
+                cards.Add(cb);
+            }
+            discardPile.Clear();
+            Deck.Shuffle(ref cards);
+            drawPile = UpgradeCardsList(cards);
+            ArrangeDrawPile();
+        }
+
         // check to see if the current player has won
         if (CURRENT_PLAYER.hand.Count == 0)
         {
@@ -189,25 +202,24 @@ public class FlipOut : MonoBehaviour
         }
         return (false);
     }
-    */
 
     public void RestartGame()
     {
         CURRENT_PLAYER = null;
-        SceneManager.LoadScene("FlipOut");
+        SceneManager.LoadScene("__FlipOut_Scene_0");
     }
 
     // method veries that the card chosen can be played on the dP
-    public bool ValidPlay(CardFlipOut cf)
+    public bool ValidPlay(CardFlipOut cb)
     {
         // its valid if the rank is the same
-        if (cf.rank == targetCard.rank)
+        if (cb.rank == targetCard.rank)
         {
             return (true);
         }
 
         // its valid if the suit is the same
-        if (cf.col == targetCard.col)
+        if (cb.suit == targetCard.suit)
         {
             return (true);
         }
@@ -218,32 +230,32 @@ public class FlipOut : MonoBehaviour
 
 
     // this makes a new card the target
-    public CardFlipOut MoveToTarget(CardFlipOut tCF)
+    public CardFlipOut MoveToTarget(CardFlipOut tCB)
     {
-        tCF.timeStart = 0;
-        tCF.MoveTo(layout.discardPile.pos + Vector3.back);
-        tCF.state = CBState.toTarget;
-        tCF.faceUp = true;
+        tCB.timeStart = 0;
+        tCB.MoveTo(layout.discardPile.pos + Vector3.back);
+        tCB.state = CBState.toTarget;
+        tCB.faceUp = true;
 
-        tCF.SetSortingLayerName("10");
-        tCF.eventualSortLayer = layout.target.layerName;
+        tCB.SetSortingLayerName("10");
+        tCB.eventualSortLayer = layout.target.layerName;
         if (targetCard != null)
         {
             MoveToDiscard(targetCard);
         }
 
-        targetCard = tCF;
+        targetCard = tCB;
 
-        return (tCF);
+        return (tCB);
     }
 
     // this makes a new card the target
     public CardFlipOut MoveToDiscard(CardFlipOut tCB)
     {
         tCB.state = CBState.discard;
-        //discardPile.Add(tCB);
+        discardPile.Add(tCB);
         tCB.SetSortingLayerName(layout.discardPile.layerName);
-        //tCB.SetSortOrder(discardPile.Count * 4);
+        tCB.SetSortOrder(discardPile.Count * 4);
         tCB.transform.localPosition = layout.discardPile.pos + Vector3.back / 2;
 
         return (tCB);
@@ -256,18 +268,28 @@ public class FlipOut : MonoBehaviour
 
         if (drawPile.Count == 0)
         {
+            // need to shuffle the discards into the drawPile
+            int ndx;
+
+            while (discardPile.Count > 0)
+            {
+                ndx = Random.Range(0, discardPile.Count);
+                drawPile.Add(discardPile[ndx]);
+                discardPile.RemoveAt(ndx);
+            }
+
             ArrangeDrawPile();
             // show the cards moving to drawPile
             float t = Time.time;
-            foreach (CardFlipOut tCF in drawPile)
+            foreach (CardFlipOut tCB in drawPile)
             {
-                tCF.transform.localPosition = layout.discardPile.pos;
-                tCF.callbackPlayer = null;
-                tCF.MoveTo(layout.drawPile.pos);
-                tCF.timeStart = t;
+                tCB.transform.localPosition = layout.discardPile.pos;
+                tCB.callbackPlayer = null;
+                tCB.MoveTo(layout.drawPile.pos);
+                tCB.timeStart = t;
                 t += 0.02f;
-                tCF.state = CBState.toDrawpile;
-                tCF.eventualSortLayer = "0";
+                tCB.state = CBState.toDrawpile;
+                tCB.eventualSortLayer = "0";
             }
         }
 
@@ -275,7 +297,7 @@ public class FlipOut : MonoBehaviour
         return (cd);
     }
 
-    public void CardClicked(CardFlipOut tCF)
+    public void CardClicked(CardFlipOut tCB)
     {
         if (CURRENT_PLAYER.type != PlayerType.human)
         {
@@ -287,30 +309,30 @@ public class FlipOut : MonoBehaviour
             return;
         }
 
-        switch (tCF.state)
+        switch (tCB.state)
         {
             case CBState.drawpile:
                 // draw the top card
-                CardFlipOut cf = CURRENT_PLAYER.AddCard(Draw());
-                cf.callbackPlayer = CURRENT_PLAYER;
-                Utils.tr("FlipOut: CardClicked()", "Draw", cf.name);
+                CardFlipOut cb = CURRENT_PLAYER.AddCard(Draw());
+                cb.callbackPlayer = CURRENT_PLAYER;
+                Utils.tr("FlipOut: CardClicked()", "Draw", cb.name);
                 phase = TurnPhase.waiting;
                 break;
 
             case CBState.hand:
                 // check to see whether the card is valid
-                if (ValidPlay(tCF))
+                if (ValidPlay(tCB))
                 {
-                    CURRENT_PLAYER.RemoveCard(tCF);
-                    MoveToTarget(tCF);
-                    tCF.callbackPlayer = CURRENT_PLAYER;
-                    Utils.tr("FlipOut:CardClicked()", "Play", tCF.name, targetCard.name + " is target");
+                    CURRENT_PLAYER.RemoveCard(tCB);
+                    MoveToTarget(tCB);
+                    tCB.callbackPlayer = CURRENT_PLAYER;
+                    Utils.tr("FlipOut:CardClicked()", "Play", tCB.name, targetCard.name + " is target");
                     phase = TurnPhase.waiting;
                 }
                 else
                 {
                     // ignore but report when tried
-                    Utils.tr("FlipOut.CardClicked()", "Attempted to Play", tCF.name, targetCard.name + " is target");
+                    Utils.tr("FlipOut.CardClicked()", "Attempted to Play", tCB.name, targetCard.name + " is target");
                 }
                 break;
         }

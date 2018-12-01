@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/**
 public class TurnLight : MonoBehaviour
 {
-	// Update is called once per frame
-	void Update ()
+    // Update is called once per frame
+    void Update()
     {
         transform.position = Vector3.back * 3;
 
@@ -16,6 +15,5 @@ public class TurnLight : MonoBehaviour
         }
 
         transform.position += FlipOut.CURRENT_PLAYER.handSlotDef.pos;
-	}
+    }
 }
-    */

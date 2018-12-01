@@ -18,12 +18,12 @@ public class Player
     public List<CardFlipOut> hand;       // the cards in this player's hand
 
     // Add a card to the hand
-    public CardFlipOut AddCard(CardFlipOut eCF)
+    public CardFlipOut AddCard(CardFlipOut eCB)
     {
         if (hand == null) hand = new List<CardFlipOut>();
 
         // add the card to the hand
-        hand.Add(eCF);
+        hand.Add(eCB);
 
         // sort the cards by rank using LINQ if this is a human
         if (type == PlayerType.human)
@@ -38,17 +38,17 @@ public class Player
             // the LINQ operations can be a slow, but since we're only doing it once every round, it's not an issue
         }
 
-        eCF.SetSortingLayerName("10");
-        eCF.eventualSortLayer = handSlotDef.layerName;
+        eCB.SetSortingLayerName("10");
+        eCB.eventualSortLayer = handSlotDef.layerName;
 
         FanHand();
-        return (eCF);
+        return (eCB);
     }
 
     // remove a card from the hand
     public CardFlipOut RemoveCard(CardFlipOut cb)
     {
-        // if hand is null or doesnt contain cf, return null
+        // if hand is null or doesnt contain cb, return null
         if (hand == null || !hand.Contains(cb)) return null;
         hand.Remove(cb);
         FanHand();
@@ -81,7 +81,7 @@ public class Player
 
             // add the base pos of the player's hand (bottom center of the fan of the cards)
             pos += handSlotDef.pos;
-            pos.z = -.5f * i;
+            pos.z = -0.5f * i;
 
             // if not the initial deal, start moving the card immediately
             if (FlipOut.S.phase != TurnPhase.idle)
@@ -92,6 +92,12 @@ public class Player
             // set the localPos and rotation of the ith card in the hand
             hand[i].MoveTo(pos, rotQ);      // told to interpolate
             hand[i].state = CBState.toHand;
+
+            /**
+            hand[i].transform.localPosition = pos;
+            hand[i].transform.rotation = rotQ;
+            hand[i].state = CBState.hand;
+            */
 
             hand[i].faceUp = (type == PlayerType.human);
 
@@ -114,31 +120,31 @@ public class Player
 
         FlipOut.S.phase = TurnPhase.waiting;
 
-        CardFlipOut cf;
+        CardFlipOut cb;
 
         // if this is an ai player, need to make a choice what to play
         List<CardFlipOut> validCards = new List<CardFlipOut>();
-        foreach (CardFlipOut tCF in hand)
+        foreach (CardFlipOut tCB in hand)
         {
-            if (FlipOut.S.ValidPlay(tCF))
+            if (FlipOut.S.ValidPlay(tCB))
             {
-                validCards.Add(tCF);
+                validCards.Add(tCB);
             }
         }
 
         // if there are no valid cards
         if (validCards.Count == 0)
         {
-            cf = AddCard(FlipOut.S.Draw());
-            cf.callbackPlayer = this;
+            cb = AddCard(FlipOut.S.Draw());
+            cb.callbackPlayer = this;
             return;
         }
 
         // pick one if there is a card or more to play
-        cf = validCards[Random.Range(0, validCards.Count)];
-        RemoveCard(cf);
-        FlipOut.S.MoveToTarget(cf);
-        cf.callbackPlayer = this;
+        cb = validCards[Random.Range(0, validCards.Count)];
+        RemoveCard(cb);
+        FlipOut.S.MoveToTarget(cb);
+        cb.callbackPlayer = this;
     }
 
     public void CBCallback(CardFlipOut tCB)

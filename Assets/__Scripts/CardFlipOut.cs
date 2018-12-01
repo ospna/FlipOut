@@ -153,7 +153,7 @@ public class CardFlipOut : Card
 
     public override void OnMouseUpAsButton()
     {
-        // call the CardClicked method on the F.S
+        // call the CardClicked method on the B.S
         FlipOut.S.CardClicked(this);
         base.OnMouseUpAsButton();
     }
