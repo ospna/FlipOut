@@ -446,8 +446,8 @@ MonoBehaviour:
   deckXML: {fileID: 4900000, guid: c76312a0fb08948699e1abf935e4a957, type: 3}
   layoutXML: {fileID: 4900000, guid: c69b68a5f05575744a102c56a2495e1f, type: 3}
   layoutCenter: {x: 0, y: 0, z: 0}
-  handFanDegrees: 10
-  numStartingCards: 6
+  handFanDegrees: 20
+  numStartingCards: 7
   drawTimeStagger: 0.1
   deck: {fileID: 0}
   drawPile: []
