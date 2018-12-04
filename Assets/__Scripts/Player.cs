@@ -59,6 +59,7 @@ public class Player
     {
         // start Rot is the rotation about z of the first card
         float startRot = 0;
+
         startRot = handSlotDef.rot;
         if (hand.Count > 1)
         {
@@ -73,15 +74,16 @@ public class Player
         for (int i = 0; i < hand.Count; i++)
         {
             rot = startRot - FlipOut.S.handFanDegrees * i;
+            rot = 0;
             rotQ = Quaternion.Euler(0, 0, rot);
 
             pos = Vector3.up * CardFlipOut.CARD_HEIGHT / 2f;
-
             pos = rotQ * pos;
 
             // add the base pos of the player's hand (bottom center of the fan of the cards)
             pos += handSlotDef.pos;
             pos.z = -0.5f * i;
+            pos.x += 0.5f * i;
 
             // if not the initial deal, start moving the card immediately
             if (FlipOut.S.phase != TurnPhase.idle)
@@ -102,7 +104,7 @@ public class Player
             hand[i].faceUp = (type == PlayerType.human);
 
             // set the SetOrder of the cards so that they overlap properly
-            //hand[i].SetSortOrder(i * 4);
+            // hand[i].SetSortOrder(i * 4);
             hand[i].eventualSortOrder = i * 4;
 
         }
