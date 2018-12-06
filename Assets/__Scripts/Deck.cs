@@ -74,7 +74,6 @@ public class Deck : MonoBehaviour
         print(s);
 
         //Read decorators for all cards
-        // these are the small numbers/suits in the corners
         decorators = new List<Decorator>();
         // grab all decorators from the XML file
         PT_XMLHashList xDecos = xmlr.xml["xml"][0]["decorator"];
@@ -84,7 +83,6 @@ public class Deck : MonoBehaviour
             // for each decorator in the XML, copy attributes and set up location and flip if needed
             deco = new Decorator();
             deco.type = xDecos[i].att("type");
-            deco.flip = (xDecos[i].att("flip") == "1");   // too cute by half - if it's 1, set to 1, else set to 0
             deco.scale = float.Parse(xDecos[i].att("scale"));
             deco.loc.x = float.Parse(xDecos[i].att("x"));
             deco.loc.y = float.Parse(xDecos[i].att("y"));
@@ -133,6 +131,7 @@ public class Deck : MonoBehaviour
         } // for i < xCardDefs.Count
     } // ReadDeck
 
+
     public CardDefinition GetCardDefinitionByRank(int rnk)
     {
         foreach (CardDefinition cd in cardDefs)
@@ -153,7 +152,7 @@ public class Deck : MonoBehaviour
         string[] letters = new string[] { "B", "G", "P", "R", "Y" };
         foreach (string s in letters)
         {
-            for (int i = 0; i < 13; i++)
+            for (int i = 0; i < 5; i++)
             {
                 cardNames.Add(s + (i + 1));
             }
@@ -179,12 +178,6 @@ public class Deck : MonoBehaviour
             card.suit = card.name[0].ToString();
             card.rank = int.Parse(card.name.Substring(1));
 
-            if (card.suit == "D" || card.suit == "H")
-            {
-                card.colS = "Red";
-                card.color = Color.red;
-            }
-
             card.def = GetCardDefinitionByRank(card.rank);
 
             // Add Decorators
@@ -200,7 +193,7 @@ public class Deck : MonoBehaviour
                 { // it is a rank
                     //tS = rankSprites[card.rank];
                     tSR.sprite = tS;
-                    tSR.color = card.color;
+                    //tSR.color = card.color;
                 }
 
                 tSR.sortingOrder = 1;                     // make it render above card

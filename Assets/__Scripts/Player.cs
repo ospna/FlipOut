@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
+// using System.Linq;
 
 // the player can either be human or an ai
 public enum PlayerType
@@ -25,6 +25,8 @@ public class Player
         // add the card to the hand
         hand.Add(eCB);
 
+        /*
+         * can use this for the score method
         // sort the cards by rank using LINQ if this is a human
         if (type == PlayerType.human)
         {
@@ -37,6 +39,7 @@ public class Player
 
             // the LINQ operations can be a slow, but since we're only doing it once every round, it's not an issue
         }
+        */
 
         eCB.SetSortingLayerName("10");
         eCB.eventualSortLayer = handSlotDef.layerName;
@@ -95,16 +98,9 @@ public class Player
             hand[i].MoveTo(pos, rotQ);      // told to interpolate
             hand[i].state = CBState.toHand;
 
-            /**
-            hand[i].transform.localPosition = pos;
-            hand[i].transform.rotation = rotQ;
-            hand[i].state = CBState.hand;
-            */
-
             hand[i].faceUp = (type == PlayerType.human);
 
             // set the SetOrder of the cards so that they overlap properly
-            // hand[i].SetSortOrder(i * 4);
             hand[i].eventualSortOrder = i * 4;
 
         }

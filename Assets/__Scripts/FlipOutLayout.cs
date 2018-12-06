@@ -71,7 +71,7 @@ public class FlipOutLayout : MonoBehaviour
             switch (tSD.type)
             {
                 case "slot":
-                    // ignore slots of type "slot"
+                    tSD.id = int.Parse(slotsX[i].att("id"));
                     break;
 
                 case "drawpile":
@@ -79,7 +79,7 @@ public class FlipOutLayout : MonoBehaviour
                     drawPile = tSD;
                     break;
 
-                case "discaredpile":
+                case "discardpile":
                     discardPile = tSD;
                     break;
 

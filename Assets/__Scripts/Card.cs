@@ -8,8 +8,6 @@ public class Card : MonoBehaviour
     [Header("Set Dynamically")]
     public string suit;
     public int rank;
-    public Color color = Color.black;
-    public string colS = "Black";  // or "Red"
 
     public List<GameObject> decoGOs = new List<GameObject>();
     public List<GameObject> pipGOs = new List<GameObject>();

@@ -32,6 +32,7 @@ public class FlipOut : MonoBehaviour
     public List<CardFlipOut> discardPile;
     public List<Player> players;
     public CardFlipOut targetCard;
+    public FloatingScore fsRun;
     public TurnPhase phase = TurnPhase.idle;
 
     private FlipOutLayout layout;
@@ -111,7 +112,7 @@ public class FlipOut : MonoBehaviour
 
         CardFlipOut tCB;
 
-        // deal 7 cards to each player
+        // deal 6 cards to each player
         for (int i = 0; i < numStartingCards; i++)
         {
             for (int j = 0; j < 4; j++)
@@ -268,16 +269,6 @@ public class FlipOut : MonoBehaviour
 
         if (drawPile.Count == 0)
         {
-            // need to shuffle the discards into the drawPile
-            int ndx;
-
-            while (discardPile.Count > 0)
-            {
-                ndx = Random.Range(0, discardPile.Count);
-                drawPile.Add(discardPile[ndx]);
-                discardPile.RemoveAt(ndx);
-            }
-
             ArrangeDrawPile();
             // show the cards moving to drawPile
             float t = Time.time;
@@ -337,27 +328,4 @@ public class FlipOut : MonoBehaviour
                 break;
         }
     }
-
-
-    /** this Update() is temporarily used to test adding cards to players' hands
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            players[0].AddCard(Draw());
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            players[1].AddCard(Draw());
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            players[2].AddCard(Draw());
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            players[3].AddCard(Draw());
-        }
-    }
-    */
 }
