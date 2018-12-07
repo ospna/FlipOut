@@ -22,9 +22,16 @@ perform a standard 3-step move for changing places in an array
 	void Start () {
 		
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+
+    public void FlipAction()
+    {
+        print("Flip");
+    }
+
+    // Update is called once per frame
+    void Update ()
+    {
+    
 	}
+
 }

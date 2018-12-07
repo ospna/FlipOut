@@ -20,8 +20,15 @@ for each empty array slot, draw a new card
 		
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+    public void ScoreAction()
+    {
+        print("Score");
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
 }

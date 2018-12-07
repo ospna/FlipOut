@@ -15,9 +15,9 @@
   <slot type="target" x="-1.5" y="0" layer="4"/>
 
   <!-- These slots are for the four hands held by the four players-->
-  <slot type="hand"  x="-1"   y="-8"  rot="0"   player="1"  layer="3"/>
-  <slot type="hand"  x="-10" y="7"   rot="0"   player="2"  layer="3"/>
-  <slot type="hand"  x="-1"   y="7"   rot="0"   player="3"  layer="3"/>
+  <slot type="hand"  x="-6"   y="-8"  rot="0"   player="1"  layer="3"/>
+  <slot type="hand"  x="-12" y="7"   rot="0"   player="2"  layer="3"/>
+  <slot type="hand"  x="-2"   y="7"   rot="0"   player="3"  layer="3"/>
   <slot type="hand"  x="8"  y="7"   rot="0"   player="4"  layer="3"/>
 </xml>
 	

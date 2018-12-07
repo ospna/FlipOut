@@ -22,9 +22,16 @@ for each empty array slot, draw a new card
 	void Start () {
 		
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    public void SwipeAction()
+    {
+        print("Swipe");
+    }
+
+    // Update is called once per frame
+    void Update () {
 		
 	}
+
+    
 }

@@ -86,7 +86,7 @@ public class Player
             // add the base pos of the player's hand (bottom center of the fan of the cards)
             pos += handSlotDef.pos;
             pos.z = -0.5f * i;
-            pos.x += 0.5f * i;
+            pos.x += 2.3f * i;
 
             // if not the initial deal, start moving the card immediately
             if (FlipOut.S.phase != TurnPhase.idle)

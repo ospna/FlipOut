@@ -22,8 +22,15 @@ perform a standard 3-step move for swapping values in two memory variables for s
 		
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public void Swap2Action()
+    {
+        print("Swap 2");
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+
 }
